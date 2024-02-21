@@ -1,0 +1,33 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Animal {
+  id      Int      @id @default(autoincrement())
+  tagId   String   @db.VarChar(15)
+  created DateTime @default(now())
+  weights Weight[]
+  groups  Group[]
+}
+
+model Weight {
+  id       Int      @id @default(autoincrement())
+  animal   Animal   @relation(fields: [animalId], references: [id], onDelete: Cascade)
+  animalId Int
+  weight   Int
+  date     DateTime @default(now())
+}
+
+model Group {
+  id      Int      @id @default(autoincrement())
+  animals Animal[]
+  name    String
+}
